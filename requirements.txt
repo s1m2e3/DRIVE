@@ -1,3 +1,5 @@
 geopandas
 numpy
 pytest
+pylint
+pytest-asyncio

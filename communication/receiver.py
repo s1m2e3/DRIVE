@@ -1,7 +1,5 @@
 import socket
-import json
-import select
-import asyncio
+
 class Receiver():
     def __init__(self, ip:str, port:int, message_type:str="" ,socket_timeout:int = 3):
         """
@@ -21,7 +19,7 @@ class Receiver():
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.settimeout(socket_timeout)
         self.message = None
-        # self.receive()
+
     async def receive(self): 
         """
         A method to receive data from a server using a socket connection. 
@@ -35,10 +33,12 @@ class Receiver():
             self.socket.bind((self.ip,self.port))
             print("Connected to the server.")
             while True:
-                print('Waiting for message')
                 data, addr = self.socket.recvfrom(1024)  # Buffer size is 1024 bytes
-                print(f"Received message: {data.decode()} from {addr}")
                 yield data.decode()
+        except KeyboardInterrupt:
+            print("Gracefully closing...receiver")
+        except socket.timeout:
+            raise RuntimeError("Socket timed out.")
         except Exception as e:
             print("An error occurred:", e)
         
@@ -48,5 +48,10 @@ class Receiver():
             print("Socket closed.")
         
     async def main(self):
-        await self.receive()
+        """
+        An asynchronous function that loops through messages received and prints each message.
+        """
+        async for message in self.receive():
+            self.message = message
+            
         

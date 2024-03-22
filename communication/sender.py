@@ -20,8 +20,8 @@ class Sender():
         self.receiver_ip = receiver_ip
         self.receiver_port = receiver_port
         self.message = message
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.send()
+        
+        
 
     def send(self):
         """
@@ -31,19 +31,19 @@ class Sender():
         Finally, closes the socket connection. 
         """
         try:
+            # Initialize socket
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             # Connect to the server
             self.socket.connect((self.host_ip, self.host_port))
-            print("Connected to the server.")
             self.socket.sendto(self.message.encode(), (self.receiver_ip, self.receiver_port))
-            print("Message sent.")
-        
+        except KeyboardInterrupt:
+            print("Gracefully closing...sender")
         except Exception as e:
             print("An error occurred:", e)
 
         finally:
             # Close the socket
             self.socket.close()
-            print("Socket closed.")
             
     def update_message(self,message:str):
         """
