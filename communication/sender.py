@@ -1,6 +1,6 @@
 import socket
 class Sender():
-    def __init__(self, host_ip:str, host_port:int, receiver_ip:str, receiver_port:int, message:str, message_type:str=""):
+    def __init__(self, host_ip:str, host_port:int, receiver_ip:str, receiver_port:int, message:str="", message_type:str=""):
         """
         Initialize the object with the provided IP, port, message, and message_type.
 

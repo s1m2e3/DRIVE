@@ -1,5 +1,6 @@
-from receiver import Receiver
-from sender import Sender
+from .sender import Sender
+from .receiver import Receiver
+
 import json
 
 class Transceiver:
@@ -7,8 +8,8 @@ class Transceiver:
         """
         Constructor for the class. Initializes the receivers and senders lists.
         """
-        self.receivers = []
-        self.senders = []
+        self.receivers:list[Receiver] = []
+        self.senders:list[Sender] = []
     def add_messengers(self, filename:str):
         """
         Add receivers and senders based on the provided filename.
@@ -22,7 +23,7 @@ class Transceiver:
         with open(filename, 'r') as f:
             communication_json = json.load(f)
 
-        for receiver in communication_json['receiver']:
+        for receiver in communication_json['receivers']:
             self.receivers.append(Receiver(message_type = receiver['messageType'], ip = receiver['ip'], port = receiver['port']))
 
         for sender in communication_json['senders']:

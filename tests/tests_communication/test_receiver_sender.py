@@ -19,14 +19,16 @@ def test_receiver_sender_off():
     receiver = Receiver(ip='127.0.0.1', port=12345, message_type="BSM")
     asyncio.run(main(receiver))
 
-def test_receiver_sender_on():
+def test_receiver_sender_on_yield_message():
 
     @pytest.mark.asyncio
     async def main(receiver: Receiver):
         try:
             async for message in receiver.receive():
                 assert message == "Hello from sender!"
+                assert message == receiver.message
                 print("Message received successfully.")
+                
                 return
         except Exception as e:
             print("An error occurred:", e)

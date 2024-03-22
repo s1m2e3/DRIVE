@@ -34,7 +34,8 @@ class Receiver():
             print("Connected to the server.")
             while True:
                 data, addr = self.socket.recvfrom(1024)  # Buffer size is 1024 bytes
-                yield data.decode()
+                self.message = data.decode()
+                yield self.message
         except KeyboardInterrupt:
             print("Gracefully closing...receiver")
         except socket.timeout:
@@ -52,6 +53,7 @@ class Receiver():
         An asynchronous function that loops through messages received and prints each message.
         """
         async for message in self.receive():
-            self.message = message
+            pass
+            
             
         
