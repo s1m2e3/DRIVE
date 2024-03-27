@@ -20,10 +20,10 @@ class Sender():
         self.receiver_ip = receiver_ip
         self.receiver_port = receiver_port
         self.message = message
-        
+        self.status = False
         
 
-    def send(self):
+    async def send(self):
         """
         A method to send data to a server using a socket connection. 
         Connects to the specified IP address and port, then sends the message.
@@ -35,7 +35,8 @@ class Sender():
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             # Connect to the server
             self.socket.connect((self.host_ip, self.host_port))
-            self.socket.sendto(self.message.encode(), (self.receiver_ip, self.receiver_port))
+            while self.status:
+                self.socket.sendto(self.message.encode(), (self.receiver_ip, self.receiver_port))
         except KeyboardInterrupt:
             print("Gracefully closing...sender")
         except Exception as e:
@@ -53,3 +54,14 @@ class Sender():
             message (str): The new message to update the attribute with.
         """
         self.message = message
+    def start_sending(self):
+        """
+        Change status to start sending messages.
+        """
+        self.status = True
+    
+    def stop_sending(self):
+        """
+         Change status to stop sending messages.
+        """
+        self.status = False

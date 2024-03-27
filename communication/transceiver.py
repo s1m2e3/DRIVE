@@ -1,6 +1,6 @@
 from .sender import Sender
 from .receiver import Receiver
-
+import asyncio
 import json
 
 class Transceiver:
@@ -74,3 +74,21 @@ class Transceiver:
             list: A list of indices corresponding to the senders with a message type of "PSM".
         """
         return [self.senders.index(sender) for sender in self.senders if sender.message_type == "PSM"]
+    async def start_bsm_receiver(self):
+        """
+        Starts all BSM receivers in the `receivers` list.
+
+        Parameters:
+            self (object): The instance of the class.
+
+        Returns:
+            None
+        """
+        indexes = self.identify_bsm_receiver()
+        tasks = []
+        for index in indexes:
+            self.receivers[index].start_receiving()
+            tasks.append(self.receivers[index].receive())
+        await asyncio.gather(*tasks)
+        
+        

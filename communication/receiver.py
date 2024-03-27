@@ -1,5 +1,5 @@
 import socket
-
+import asyncio 
 class Receiver():
     def __init__(self, ip:str, port:int, message_type:str="" ,socket_timeout:int = 3):
         """
@@ -19,6 +19,7 @@ class Receiver():
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.settimeout(socket_timeout)
         self.message = None
+        self.status = False
 
     async def receive(self): 
         """
@@ -32,10 +33,9 @@ class Receiver():
         # Connect to the server
             self.socket.bind((self.ip,self.port))
             print("Connected to the server.")
-            while True:
+            while self.status:
                 data, addr = self.socket.recvfrom(1024)  # Buffer size is 1024 bytes
                 self.message = data.decode()
-                yield self.message
         except KeyboardInterrupt:
             print("Gracefully closing...receiver")
         except socket.timeout:
@@ -48,12 +48,15 @@ class Receiver():
             self.socket.close()
             print("Socket closed.")
         
-    async def main(self):
+    def start_receiving(self):
         """
-        An asynchronous function that loops through messages received and prints each message.
+        Change status to start receiving messages.
         """
-        async for message in self.receive():
-            pass
-            
-            
+        self.status = True
+        
+    def stop_receiving(self):
+        """
+        Change status to stop receiving messages.
+        """
+        self.status = False
         
