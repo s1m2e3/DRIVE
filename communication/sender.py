@@ -37,6 +37,7 @@ class Sender():
             self.socket.connect((self.host_ip, self.host_port))
             while self.status:
                 self.socket.sendto(self.message.encode(), (self.receiver_ip, self.receiver_port))
+                print(self.message)
         except KeyboardInterrupt:
             print("Gracefully closing...sender")
         except Exception as e:

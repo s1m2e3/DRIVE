@@ -36,6 +36,7 @@ class Receiver():
             while self.status:
                 data, addr = self.socket.recvfrom(1024)  # Buffer size is 1024 bytes
                 self.message = data.decode()
+                print(self.message)
         except KeyboardInterrupt:
             print("Gracefully closing...receiver")
         except socket.timeout:

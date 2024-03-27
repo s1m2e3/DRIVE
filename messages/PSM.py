@@ -18,7 +18,7 @@ class PSM(Message):
     def __init__(self):
         super().__init__()
         
-    def add_data_frame(self, personal_safety_message):
+    def add_personal_safety_message(self, personal_safety_message):
         personal_safety_message = asdict(personal_safety_message)
         self.data.update(personal_safety_message)
 
