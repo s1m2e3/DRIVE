@@ -8,6 +8,12 @@ class TravelerInfoType(Enum):
     advisory = 1
     roadSignage = 2
     comercialSignage = 3
+class PersonalDeviceUserType(Enum):
+    unavailable = 0
+    aPEDESTRIAN = 1
+    aPEDALCYCLIST = 2
+    aPUBLICSAFETYWORKER = 3
+    anANIMAL = 4   
 
 @dataclass
 class Position3D():
@@ -23,7 +29,6 @@ class RoadSignID():
 class RoadSegmentReferenceID():
     region: Optional[int]
     id: int
-
 @dataclass
 class GeographicalPath():
     name: Optional[str]
@@ -47,3 +52,8 @@ class SpeedLimit():
 @dataclass
 class ExitService():
     item: Union[int,str]
+@dataclass
+class PositionalAccuracy():
+    semiMajor: int
+    semiMinor: int
+    orientation: int

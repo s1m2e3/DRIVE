@@ -22,8 +22,8 @@ def test_receiver_sender_on_yield_message():
     @pytest.mark.asyncio
     async def get_message(receiver: Receiver):
         pass
-        # assert "Hello from sender!" == receiver.message
-        # receiver.stop_receiving()
+        assert "Hello from sender!" == receiver.message
+        receiver.stop_receiving()
      
     async def main(receiver: Receiver):
         receiver.start_receiving()

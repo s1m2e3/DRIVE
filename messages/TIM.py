@@ -1,6 +1,6 @@
 from message import Message
 from dataclasses import dataclass, asdict
-from data_classes import *
+from data_classes import TravelerInfoType, RoadSignID, GeographicalPath, Advisory, WorkZone, GenericSign, SpeedLimit, ExitService
 from typing import Union,List
 @dataclass
 class DataFrame:
@@ -11,7 +11,7 @@ class DataFrame:
     priority: int
     regions: List[GeographicalPath]
     content: Union[Advisory,WorkZone,GenericSign,SpeedLimit,ExitService]
-    
+
 class TIM(Message):
     def __init__(self):
         super().__init__()
