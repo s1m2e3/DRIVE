@@ -18,12 +18,6 @@ class PersonalDeviceUserType(Enum):
     aPUBLICSAFETYWORKER = 3
     anANIMAL = 4   
 
-class PriorityRequestType(Enum):
-
-    priorityRequestTypeReserved = 0
-    priorityRequest = 1
-    priorityRequestUpdate = 2
-    priorityCancellation = 3
 
 class Extent(Enum):
     useInstantlyOnly = 0
@@ -172,6 +166,15 @@ class PositionalAccuracy():
     orientation: int
 
 @dataclass
+class PositionConfidenceSet():
+    pos : PositionConfidence
+    elevation : ElevationConfidence
+@dataclass
+class SpeedandHeadingandThrottleConfidence():
+    heading: HeadingConfidence
+    speed: SpeedConfidence
+    throttle: ThrottleConfidence
+@dataclass
 class FullPositionVector():
     utcTime: int
     long: int
@@ -179,7 +182,7 @@ class FullPositionVector():
     elevation: int
     heading: int
     speed: int
-    posAccuracy: List[int,int,int]
+    posAccuracy: PositionalAccuracy
     timeConfidence: TimeConfidence
-    posConfidence: List[PositionConfidence,ElevationConfidence]
-    speedConfidence: Optional[List[HeadingConfidence,SpeedConfidence, ThrottleConfidence]]
+    posConfidence: PositionConfidenceSet
+    speedConfidence: SpeedandHeadingandThrottleConfidence

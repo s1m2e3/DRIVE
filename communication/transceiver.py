@@ -8,6 +8,7 @@ class TransceiverType(Enum):
     BSM = 0
     TIM = 1
     PSM = 2
+    RSA = 3
 
 class Transceiver:
     def __init__(self,kind:TransceiverType):

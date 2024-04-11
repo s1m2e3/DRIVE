@@ -1,7 +1,7 @@
-from .message import Message
+from message import Message
 from dataclasses import dataclass, asdict
-from .data_classes import PersonalDeviceUserType, Position3D, PositionalAccuracy
-from typing import Union,List
+from data_classes import PersonalDeviceUserType, Position3D, PositionalAccuracy
+from typing import Union,List, Optional
 @dataclass
 class PersonalSafetyMessage:
     basicType : PersonalDeviceUserType 
