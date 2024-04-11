@@ -1,6 +1,6 @@
-from message import Message
+from .message import Message
 from dataclasses import dataclass, asdict
-from data_classes import PersonalDeviceUserType, Position3D, PositionalAccuracy
+from .data_classes import PersonalDeviceUserType, Position3D, PositionalAccuracy
 from typing import Union,List
 @dataclass
 class PersonalSafetyMessage:
@@ -20,6 +20,7 @@ class PSM(Message):
         
     def add_personal_safety_message(self, personal_safety_message):
         personal_safety_message = asdict(personal_safety_message)
+        personal_safety_message['basicType'] = personal_safety_message['basicType'].value
         self.data.update(personal_safety_message)
 
 

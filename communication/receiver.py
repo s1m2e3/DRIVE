@@ -36,7 +36,8 @@ class Receiver():
             while self.status:
                 data, addr = self.socket.recvfrom(1024)  # Buffer size is 1024 bytes
                 self.message = data.decode()
-                print(self.message)
+                print("Message received from", addr, ":", self.message)
+                await asyncio.sleep(0.001)
         except KeyboardInterrupt:
             print("Gracefully closing...receiver")
         except socket.timeout:

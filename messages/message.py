@@ -9,7 +9,7 @@ class Message():
     def from_json(self, json_str):
         self.data = json.loads(json_str)
     def update_timestamp(self):
-        self.data["timestamp"] = self.get_timestamp()
+        self.data["timeStamp"] = self.get_timestamp()
     def get_timestamp(self):
         return int(round(time.time() * 1000))
 

@@ -2,7 +2,7 @@
     "receivers": [
         {
         "messageType": "BSM",
-        "ip": "127.0.0.1",
+        "ip": "192.168.0.76",
         "port": 8080
         },
         {
@@ -17,33 +17,18 @@
             "messageType": "PSM",
             "host_ip": "127.0.0.1",
             "host_port": 8081,
-            "receiver_ip": "127.0.0.1",
-            "receiver_port": 8082,
+            "receiver_ip": "192.168.0.138",
+            "receiver_port": 33333,
             "id": "1"
-        },
-        {
-            "messageType": "PSM",
-            "host_ip": "127.0.0.2",
-            "host_port": 8081,
-            "receiver_ip": "127.0.0.1",
-            "receiver_port": 8082,
-            "id": "2"
         },
         {
             "messageType": "TIM",
             "host_ip": "127.0.0.1",
             "host_port": 8081,
-            "receiver_ip": "127.0.0.1",
-            "receiver_port": 8082,
+            "receiver_ip": "192.168.0.138",
+            "receiver_port": 22222,
             "id" : 1
-        },
-        {
-            "messageType": "TIM",
-            "host_ip": "127.0.0.2",
-            "host_port": 8081,
-            "receiver_ip": "127.0.0.1",
-            "receiver_port": 8082,
-            "id" : 2
         }
+        
     ]
 }

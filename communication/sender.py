@@ -1,4 +1,5 @@
 import socket
+import asyncio
 class Sender():
     def __init__(self, host_ip:str, host_port:int, receiver_ip:str, receiver_port:int, message:str="", message_type:str=""):
         """
@@ -37,7 +38,8 @@ class Sender():
             self.socket.connect((self.host_ip, self.host_port))
             while self.status:
                 self.socket.sendto(self.message.encode(), (self.receiver_ip, self.receiver_port))
-                print(self.message)
+                print("Message sent successfully:", self.message)
+                await asyncio.sleep(0.001)
         except KeyboardInterrupt:
             print("Gracefully closing...sender")
         except Exception as e:

@@ -1,6 +1,6 @@
-from message import Message
+from .message import Message
 from dataclasses import dataclass, asdict
-from data_classes import TravelerInfoType, RoadSignID, GeographicalPath, Advisory, WorkZone, GenericSign, SpeedLimit, ExitService
+from .data_classes import TravelerInfoType, RoadSignID, GeographicalPath, Advisory, WorkZone, GenericSign, SpeedLimit, ExitService
 from typing import Union,List
 @dataclass
 class DataFrame:
@@ -18,6 +18,7 @@ class TIM(Message):
         self.data["dataFrames"]= []
     def add_data_frame(self, data_frame):
         data_frame = asdict(data_frame)
+        data_frame['frameType'] = data_frame['frameType'].value
         self.data["dataFrames"].append(data_frame)
     
 
