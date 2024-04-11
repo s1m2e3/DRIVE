@@ -1,0 +1,1 @@
+"{\"timeStamp\": 1712803382321, \"dataFrames\": [{\"frameType\": 2, \"msgID\": \"hello\", \"startTime\": 0, \"durationTime\": 0, \"priority\": 0, \"regions\": [{\"name\": null, \"id\": null, \"anchor\": {\"lat\": 0, \"lon\": 0}, \"laneWidth\": null, \"closedPath\": null, \"direction\": null}], \"content\": {\"item\": 1234}}]}"

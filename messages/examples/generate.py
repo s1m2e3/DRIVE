@@ -1,7 +1,10 @@
-from ..PSM import PSM,PersonalSafetyMessage
-from ..TIM import TIM, DataFrame
-from ..RSA import RSA, RoadSideAlert
-from ..data_classes import TravelerInfoType,Position3D,PositionalAccuracy,GeographicalPath,Advisory
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from PSM import PSM,PersonalSafetyMessage
+from TIM import TIM, DataFrame
+from RSA import RSA, RoadSideAlert
+from data_classes import TravelerInfoType,Position3D,PositionalAccuracy,GeographicalPath,Advisory
 import json
 
 psm_message = PSM()
@@ -34,3 +37,4 @@ rsa_json = rsa_message.to_json()
 
 with open('rsa.json', 'w', encoding='utf-8') as f:
   json.dump(rsa_json, f, ensure_ascii=False, indent=4)
+

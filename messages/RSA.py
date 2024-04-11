@@ -1,6 +1,6 @@
 from message import Message
 from typing import List
-from data_classes import PriorityRequestType,Extent, FullPositionVector 
+from data_classes import Extent, FullPositionVector 
 from typing import Optional
 from dataclasses import dataclass, asdict
 @dataclass
@@ -21,11 +21,21 @@ class RSA(Message):
     def add_road_side_alert(self, road_side_alert):
         
         road_side_alert = asdict(road_side_alert)
-        road_side_alert['extent'] = road_side_alert['extent'].value
-        road_side_alert['FullPositionVector']['TimeConfidence'] = road_side_alert['FullPositionVector']['TimeConfidence'].value
-        road_side_alert['FullPositionVector']['posConfidence']['pos'] = road_side_alert['FullPositionVector']['posConfidence']['pos'].value
-        road_side_alert['FullPositionVector']['posConfidence']['elevation'] = road_side_alert['FullPositionVector']['posConfidence']['elevation'].value
-        road_side_alert['FullPositionVector']['speedConfidence']['speed'] = road_side_alert['FullPositionVector']['speedConfidence']['speed'].value
-        road_side_alert['FullPositionVector']['speedConfidence']['heading'] = road_side_alert['FullPositionVector']['speedConfidence']['heading'].value
-        road_side_alert['FullPositionVector']['speedConfidence']['throttle'] = road_side_alert['FullPositionVector']['speedConfidence']['throttle'].value
+        print(road_side_alert)
+        if road_side_alert['extent'] is not None:
+            road_side_alert['extent'] = road_side_alert['extent'].value
+        if road_side_alert['position'] is not None:
+            if road_side_alert['position']['timeConfidence'] is not None:
+                road_side_alert['position']['timeConfidence'] = road_side_alert['position']['timeConfidence'].value
+            if road_side_alert['position']['posConfidence']['pos'] is not None:
+                road_side_alert['position']['posConfidence']['pos'] = road_side_alert['position']['posConfidence']['pos'].value
+            if road_side_alert['position']['posConfidence']['elevation'] is not None:
+                road_side_alert['position']['posConfidence']['elevation'] = road_side_alert['position']['posConfidence']['elevation'].value
+            if road_side_alert['position']['speedConfidence']['speed'] is not None:
+                road_side_alert['position']['speedConfidence']['speed'] = road_side_alert['position']['speedConfidence']['speed'].value
+            if road_side_alert['position']['speedConfidence']['heading'] is not None:
+                road_side_alert['position']['speedConfidence']['heading'] = road_side_alert['position']['speedConfidence']['heading'].value
+            if road_side_alert['position']['speedConfidence']['throttle'] is not None:
+                road_side_alert['position']['speedConfidence']['throttle'] = road_side_alert['position']['speedConfidence']['throttle'].value
+        
         self.data.update(road_side_alert)

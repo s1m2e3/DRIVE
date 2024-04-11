@@ -1,6 +1,6 @@
-from .message import Message
+from message import Message
 from dataclasses import dataclass, asdict
-from .data_classes import TravelerInfoType, RoadSignID, GeographicalPath, Advisory, WorkZone, GenericSign, SpeedLimit, ExitService
+from data_classes import TravelerInfoType, RoadSignID, GeographicalPath, Advisory, WorkZone, GenericSign, SpeedLimit, ExitService
 from typing import Union,List
 @dataclass
 class DataFrame:
