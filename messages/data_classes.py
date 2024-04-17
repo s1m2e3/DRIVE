@@ -122,6 +122,52 @@ class ThrottleConfidence(Enum):
     prec10percent = 1
     prec1percent = 2
     prec0_5percent = 3
+class TransmissionState(Enum):
+    neutral = 0
+    park = 1
+    forwardGears = 2
+    reverseGears = 3
+    reserved1 = 4
+    reserved2 = 5
+    reserved3 = 6
+    unavailable = 7
+
+class BrakeSystemStatus(Enum):
+    unavailable = 0
+    leftFront = 1
+    leftRear = 2
+    rightFront = 3
+    rightRear = 4
+
+class TractionControlStatus(Enum):
+    unavailable = 0
+    off = 1
+    on = 2
+    engaged = 3
+
+class AntiLockBrakeStatus(Enum):
+    unavailable = 0
+    off = 1
+    on = 2
+    engaged = 3
+
+class StabilityControlStatus(Enum):
+    unavailable = 0
+    off = 1
+    on = 2
+    engaged = 3
+
+class brakeBoostApplied(Enum):
+    unavailable = 0
+    off = 1
+    on = 2
+
+class AuxiliaryBrakeStatus(Enum):
+    unavailable = 0
+    off = 1
+    on = 2
+    reserved = 3
+
 @dataclass
 class Position3D():
     lat: float
@@ -186,3 +232,38 @@ class FullPositionVector():
     timeConfidence: TimeConfidence
     posConfidence: PositionConfidenceSet
     speedConfidence: SpeedandHeadingandThrottleConfidence
+@dataclass
+class AccelerationSet4Way():
+    long: int
+    lat: int
+    vert: int
+    yaw: int
+@dataclass
+class BrakeSystemStatus():
+    wheelBrakes: BrakeSystemStatus
+    traction: TractionControlStatus
+    abs: AntiLockBrakeStatus
+    scs: StabilityControlStatus
+    brakeBoost: brakeBoostApplied
+    auxBrakes:AuxiliaryBrakeStatus
+
+@dataclass 
+class VehicleSize():
+    width: int
+    length: int
+@dataclass
+class BSMcoreData():
+    msgCnt: int
+    id: bytes
+    secMark: int
+    lat: int
+    long: int
+    elev: int
+    accuracy: PositionalAccuracy
+    transmission: TransmissionState
+    speed: int
+    heading: int
+    angle: int
+    accelSet: AccelerationSet4Way
+    brakes: BrakeSystemStatus
+    size: VehicleSize

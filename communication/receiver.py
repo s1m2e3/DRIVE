@@ -1,7 +1,10 @@
 import socket
 import asyncio 
+from ..messages.message import MessageType
+from ..messages.inspector import Inspector
+from typing import Union
 class Receiver():
-    def __init__(self, ip:str, port:int, message_type:str="" ,socket_timeout:int = 3):
+    def __init__(self,message_type:Union[MessageType.BSM,MessageType.TIM,MessageType.PSM,MessageType.RSA], ip:str, port:int ,socket_timeout:int = 3):
         """
         Initialize the object with the provided IP, port, and message_type.
 
@@ -14,6 +17,7 @@ class Receiver():
             None
         """
         self.message_type = message_type
+        self.inspector = Inspector(message_type)
         self.ip = ip
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

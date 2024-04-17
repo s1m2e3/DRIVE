@@ -3,7 +3,8 @@ from .receiver import Receiver
 from enum import Enum
 import asyncio
 import json
-
+from typing import Union
+from ..messages.message import Message, MessageType
 class TransceiverType(Enum):
     BSM = 0
     TIM = 1
@@ -11,7 +12,7 @@ class TransceiverType(Enum):
     RSA = 3
 
 class Transceiver:
-    def __init__(self,kind:TransceiverType):
+    def __init__(self,kind:Union[TransceiverType.BSM,TransceiverType.TIM,TransceiverType.PSM,TransceiverType.RSA]):
         self.kind = kind
         self.receiver = None
         self.sender = None
@@ -34,25 +35,25 @@ class Transceiver:
             receivers = [conf['messageType'] for conf in communication_json['receivers']]
             receiver_bsm_index = receivers.index('BSM')
             bsm_conf = communication_json['receivers'][receiver_bsm_index]
-            self.receiver = Receiver(message_type = bsm_conf['messageType'],ip = bsm_conf['ip'], port = bsm_conf['port'])
+            self.receiver = Receiver(message_type = MessageType.BSM,ip = bsm_conf['ip'], port = bsm_conf['port'])
 
         elif self.kind == TransceiverType.TIM:
             senders = [conf['messageType'] for conf in communication_json['senders']]
             sender_tim_index = senders.index('TIM')
             tim_conf = communication_json['senders'][sender_tim_index]
-            self.sender = Sender(message_type = tim_conf['messageType'],host_ip = tim_conf['host_ip'],host_port = tim_conf['host_port'],
+            self.sender = Sender(message_type = MessageType.TIM,host_ip = tim_conf['host_ip'],host_port = tim_conf['host_port'],
                                  receiver_ip=tim_conf['receiver_ip'], receiver_port = tim_conf['receiver_port'])
         
         elif self.kind == TransceiverType.PSM:
             receivers = [conf['messageType'] for conf in communication_json['receivers']]
             receiver_psm_index = receivers.index('PSM')
             psm_conf = communication_json['receivers'][receiver_psm_index]
-            self.receiver = Receiver(message_type = psm_conf['messageType'],ip = psm_conf['ip'], port = psm_conf['port'])
+            self.receiver = Receiver(message_type = MessageType.PSM,ip = psm_conf['ip'], port = psm_conf['port'])
 
             senders = [conf['messageType'] for conf in communication_json['senders']]
             sender_psm_index = senders.index('PSM')
             psm_conf = communication_json['senders'][sender_psm_index]
-            self.sender = Sender(message_type = psm_conf['messageType'],host_ip = psm_conf['host_ip'],host_port = psm_conf['host_port'],
+            self.sender = Sender(message_type = MessageType.PSM,host_ip = psm_conf['host_ip'],host_port = psm_conf['host_port'],
                                  receiver_ip=psm_conf['receiver_ip'], receiver_port = psm_conf['receiver_port'])
 
     async def store_message(self):

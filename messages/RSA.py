@@ -1,4 +1,4 @@
-from message import Message
+from message import Message, MessageType
 from typing import List
 from data_classes import Extent, FullPositionVector 
 from typing import Optional
@@ -17,7 +17,7 @@ class RoadSideAlert:
 class RSA(Message):
     def __init__(self):
         super().__init__()
-
+        self.kind = MessageType.RSA
     def add_road_side_alert(self, road_side_alert):
         
         road_side_alert = asdict(road_side_alert)
