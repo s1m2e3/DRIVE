@@ -246,11 +246,37 @@ class BrakeSystemStatus():
     scs: int = StabilityControlStatus.unavailable.value
     brakeBoost: int = brakeBoostApplied.unavailable.value
     auxBrakes:int = AuxiliaryBrakeStatus.unavailable.value
+    def __post_init__(self):
+        self._validate_input()
+
+    def _validate_input(self):
+        if not isinstance(self.wheelBrakes, int) or self.wheelBrakes < BrakeAppliedStatus.unavailable.value or self.wheelBrakes > BrakeAppliedStatus.max_value:
+            raise ValueError("wheelBrakes must be an integer between BrakeAppliedStatus.unavailable.value and BrakeAppliedStatus.max_value")
+        if not isinstance(self.traction, int) or self.traction < TractionControlStatus.unavailable.value or self.traction > TractionControlStatus.max_value:
+            raise ValueError("traction must be an integer between TractionControlStatus.unavailable.value and TractionControlStatus.max_value")
+        if not isinstance(self.abs, int) or self.abs < AntiLockBrakeStatus.unavailable.value or self.abs > AntiLockBrakeStatus.max_value:
+            raise ValueError("abs must be an integer between AntiLockBrakeStatus.unavailable.value and AntiLockBrakeStatus.max_value")
+        if not isinstance(self.scs, int) or self.scs < StabilityControlStatus.unavailable.value or self.scs > StabilityControlStatus.max_value:
+            raise ValueError("scs must be an integer between StabilityControlStatus.unavailable.value and StabilityControlStatus.max_value")
+        if not isinstance(self.brakeBoost, int) or self.brakeBoost < brakeBoostApplied.unavailable.value or self.brakeBoost > brakeBoostApplied.max_value:
+            raise ValueError("brakeBoost must be an integer between brakeBoostApplied.unavailable.value and brakeBoostApplied.max_value")
+        if not isinstance(self.auxBrakes, int) or self.auxBrakes < AuxiliaryBrakeStatus.unavailable.value or self.auxBrakes > AuxiliaryBrakeStatus.max_value:
+            raise ValueError("auxBrakes must be an integer between AuxiliaryBrakeStatus.unavailable.value and AuxiliaryBrakeStatus.max_value")
+        
 
 @dataclass 
 class VehicleSize():
     width: int = 0
     length: int = 0
+    def __post_init__(self):
+        self._validate_input()
+
+    def _validate_input(self):
+        if not isinstance(self.width, int) or self.width < 0 or self.width > 1023:
+            raise ValueError("width must be within the range [0, 1023]")
+        if not isinstance(self.length, int) or self.length < 0 or self.length > 4095 :
+            raise ValueError("length must be withing the range [0, 4095]")
+
 @dataclass
 class BSMcoreData():
     msgCnt: int = 0
@@ -275,57 +301,38 @@ class BSMcoreData():
         for attr, value in vars(self).items():
             if not isinstance(getattr(self, attr), type(value)):
                 raise TypeError(f"{attr} must be of type {type(value)}")
-    
+        self._validate_input()
     def _validate_input(self):
         """
         Validate inputs, raise a ValueError if there is an invalid input.
         """
-        for attr, value in vars(self).items():
-            if not isinstance(getattr(self, attr), type(value)):
-                raise ValueError(f"{attr} must be of type {type(value)}")
+        
+        if self.speed < 0 or self.speed > 8191:
+            raise ValueError("Speed must be between 0 and 8191")
     
-        if self.speed < 0:
-            raise ValueError("Speed cannot be negative")
-    
-        if self.elev < 0:
-            raise ValueError("Elevation cannot be negative")
+        if self.elev < -4096 or self.elev > 61439:
+            raise ValueError("Elevation must be between -4096 and 61439")
     
         if self.angle < 0 or self.angle > 28800:
             raise ValueError("Angle must be between 0 and 28800")
     
-        if self.lat < -9000000 or self.lat > 9000000:
-            raise ValueError("Latitude must be between -9000000 and 9000000")
+        if self.lat < -900000000 or self.lat > 900000001:
+            raise ValueError("Latitude must be between -900000000 and 900000001")
     
-        if self.long < -18000000 or self.long > 18000000:
-            raise ValueError("Longitude must be between -18000000 and 18000000")
+        if self.long < -1799999999 or self.long > .1800000001:
+            raise ValueError("Longitude must be between -1799999999 and .1800000001")
     
-        if self.secMark < 0 or self.secMark > 2000000000:
+        if self.secMark < 0 or self.secMark > 65535:
             raise ValueError("Second Mark must be between 0 and 2000000000")
     
         if self.msgCnt < 0 or self.msgCnt > 127:
             raise ValueError("Message Count must be between 0 and 127")
     
-        if self.size.width < 0 or self.size.width > 127:
-            raise ValueError("Width must be between 0 and 127")
-    
-        if self.size.length < 0 or self.size.length > 127:
-            raise ValueError("Length must be between 0 and 127")
-    
-        if self.accelSet.long < -32767 or self.accelSet.long > 32767:
-            raise ValueError("Long Acceleration must be between -32767 and 32767")
-    
-        if self.accelSet.lat < -32767 or self.accelSet.lat > 32767:
-            raise ValueError("Lat Acceleration must be between -32767 and 32767")
-    
-        if self.accelSet.vert < -32767 or self.accelSet.vert > 32767:
-            raise ValueError("Vert Acceleration must be between -32767 and 32767")
-    
-        if self.accelSet.yaw < -32767 or self.accelSet.yaw > 32767:
-            raise ValueError("Yaw Acceleration must be between -32767 and 32767")
-    
-        if self.brakes.wheelBrakes < 0 or self.brakes.wheelBrakes > 4:
-            raise ValueError("Wheel Brakes must be between 0 and 4")
-    
+        if self.id < 0 or self.id > 10000000:
+            raise ValueError("ID must be between 0 and 10000000")
+        
+        if not isinstance(self.transmission, int) or self.transmission < TransmissionState.unavailable.value or self.transmission > TransmissionState.max_value:
+            raise ValueError("Transmission must be an integer between TransmissionState.unavailable.value and TransmissionState.max_value")
         
     
     
