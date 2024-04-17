@@ -20,5 +20,4 @@ class PSM(Message):
         self.kind = MessageType.PSM
     def add_personal_safety_message(self, personal_safety_message):
         personal_safety_message = asdict(personal_safety_message)
-        personal_safety_message['basicType'] = personal_safety_message['basicType'].value
         self.data.update(personal_safety_message)

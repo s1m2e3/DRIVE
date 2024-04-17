@@ -9,7 +9,7 @@ import asyncio
 sender = Transceiver(TransceiverType.PSM)
 sender.add_messengers('../../config/communicationConfig.json')
 psm_message = PSM()
-personal_safety_message = PersonalSafetyMessage(basicType=TravelerInfoType.roadSignage,
+personal_safety_message = PersonalSafetyMessage(basicType=TravelerInfoType.roadSignage.value,
     secMark=0, msgCnt=0, id='\x00\x00\x00\x00\x00\x00\x00\x00',
     position=Position3D(lat=0, lon=0), accuracy=PositionalAccuracy(semiMajor=0, semiMinor=0, orientation=0), speed=0, heading=0)
 

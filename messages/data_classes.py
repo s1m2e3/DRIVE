@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Union,List,Optional
-
+import os
 
 class TravelerInfoType(Enum):
 
@@ -132,7 +132,7 @@ class TransmissionState(Enum):
     reserved3 = 6
     unavailable = 7
 
-class BrakeSystemStatus(Enum):
+class BrakeAppliedStatus(Enum):
     unavailable = 0
     leftFront = 1
     leftRear = 2
@@ -207,9 +207,9 @@ class ExitService():
     item: Union[int,str]
 @dataclass
 class PositionalAccuracy():
-    semiMajor: int
-    semiMinor: int
-    orientation: int
+    semiMajor: int = 255
+    semiMinor: int = 255
+    orientation: int = 65535
 
 @dataclass
 class PositionConfidenceSet():
@@ -234,36 +234,104 @@ class FullPositionVector():
     speedConfidence: SpeedandHeadingandThrottleConfidence
 @dataclass
 class AccelerationSet4Way():
-    long: int
-    lat: int
-    vert: int
-    yaw: int
+    long: int = 2001
+    lat: int = 2001
+    vert: int = -127
+    yaw: int = 0
 @dataclass
 class BrakeSystemStatus():
-    wheelBrakes: BrakeSystemStatus
-    traction: TractionControlStatus
-    abs: AntiLockBrakeStatus
-    scs: StabilityControlStatus
-    brakeBoost: brakeBoostApplied
-    auxBrakes:AuxiliaryBrakeStatus
+    wheelBrakes: int = BrakeAppliedStatus.unavailable.value
+    traction: int = TractionControlStatus.unavailable.value
+    abs: int = AntiLockBrakeStatus.unavailable.value
+    scs: int = StabilityControlStatus.unavailable.value
+    brakeBoost: int = brakeBoostApplied.unavailable.value
+    auxBrakes:int = AuxiliaryBrakeStatus.unavailable.value
 
 @dataclass 
 class VehicleSize():
-    width: int
-    length: int
+    width: int = 0
+    length: int = 0
 @dataclass
 class BSMcoreData():
-    msgCnt: int
-    id: bytes
-    secMark: int
-    lat: int
-    long: int
-    elev: int
-    accuracy: PositionalAccuracy
-    transmission: TransmissionState
-    speed: int
-    heading: int
-    angle: int
-    accelSet: AccelerationSet4Way
-    brakes: BrakeSystemStatus
-    size: VehicleSize
+    msgCnt: int = 0
+    id: int = int
+    secMark: int = 65535
+    lat: int  = 900000001
+    long: int = 1800000001
+    elev: int = -4096
+    accuracy: PositionalAccuracy = PositionalAccuracy()
+    transmission: int = TransmissionState.unavailable.value
+    speed: int = 8191
+    heading: int = 28800
+    angle: int = 127
+    accelSet: AccelerationSet4Way = AccelerationSet4Way()
+    brakes: BrakeSystemStatus = BrakeSystemStatus()
+    size: VehicleSize = VehicleSize()
+
+    def __post_init__(self):
+        """
+        After the init method, validate each attribute to ensure they are of the correct type.
+        """
+        for attr, value in vars(self).items():
+            if not isinstance(getattr(self, attr), type(value)):
+                raise TypeError(f"{attr} must be of type {type(value)}")
+    
+    def _validate_input(self):
+        """
+        Validate inputs, raise a ValueError if there is an invalid input.
+        """
+        for attr, value in vars(self).items():
+            if not isinstance(getattr(self, attr), type(value)):
+                raise ValueError(f"{attr} must be of type {type(value)}")
+    
+        if self.speed < 0:
+            raise ValueError("Speed cannot be negative")
+    
+        if self.elev < 0:
+            raise ValueError("Elevation cannot be negative")
+    
+        if self.angle < 0 or self.angle > 28800:
+            raise ValueError("Angle must be between 0 and 28800")
+    
+        if self.lat < -9000000 or self.lat > 9000000:
+            raise ValueError("Latitude must be between -9000000 and 9000000")
+    
+        if self.long < -18000000 or self.long > 18000000:
+            raise ValueError("Longitude must be between -18000000 and 18000000")
+    
+        if self.secMark < 0 or self.secMark > 2000000000:
+            raise ValueError("Second Mark must be between 0 and 2000000000")
+    
+        if self.msgCnt < 0 or self.msgCnt > 127:
+            raise ValueError("Message Count must be between 0 and 127")
+    
+        if self.size.width < 0 or self.size.width > 127:
+            raise ValueError("Width must be between 0 and 127")
+    
+        if self.size.length < 0 or self.size.length > 127:
+            raise ValueError("Length must be between 0 and 127")
+    
+        if self.accelSet.long < -32767 or self.accelSet.long > 32767:
+            raise ValueError("Long Acceleration must be between -32767 and 32767")
+    
+        if self.accelSet.lat < -32767 or self.accelSet.lat > 32767:
+            raise ValueError("Lat Acceleration must be between -32767 and 32767")
+    
+        if self.accelSet.vert < -32767 or self.accelSet.vert > 32767:
+            raise ValueError("Vert Acceleration must be between -32767 and 32767")
+    
+        if self.accelSet.yaw < -32767 or self.accelSet.yaw > 32767:
+            raise ValueError("Yaw Acceleration must be between -32767 and 32767")
+    
+        if self.brakes.wheelBrakes < 0 or self.brakes.wheelBrakes > 4:
+            raise ValueError("Wheel Brakes must be between 0 and 4")
+    
+        
+    
+    
+
+    
+    
+
+    
+
