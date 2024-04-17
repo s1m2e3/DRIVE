@@ -12,7 +12,7 @@ class Inspector():
     def inspect_sending(self,message):
         
         if self.message_type == MessageType.BSM:
-            
+            message_object = BSM()
         elif self.message_type == MessageType.TIM:
             pass
         elif self.message_type == MessageType.PSM:

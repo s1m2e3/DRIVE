@@ -9,6 +9,11 @@ class TravelerInfoType(Enum):
     advisory = 1
     roadSignage = 2
     comercialSignage = 3
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
 
 class PersonalDeviceUserType(Enum):
 
@@ -17,7 +22,11 @@ class PersonalDeviceUserType(Enum):
     aPEDALCYCLIST = 2
     aPUBLICSAFETYWORKER = 3
     anANIMAL = 4   
-
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 4:
+            raise ValueError("value must be an integer between 0 and 4")
 
 class Extent(Enum):
     useInstantlyOnly = 0
@@ -36,7 +45,12 @@ class Extent(Enum):
     useFor5000000meters = 13
     useFor10000000meters = 14
     forever = 15
-
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 15:
+            raise ValueError("value must be an integer between 0 and 15")
+        
 class TimeConfidence(Enum):
     unavailable = 0
     time_100_000 = 1
@@ -63,6 +77,11 @@ class TimeConfidence(Enum):
     time_000_000_005 = 22  
     time_000_000_002 = 23  
     time_000_000_001 = 24
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 24:
+            raise ValueError("value must be an integer between 0 and 24")
     
 class PositionConfidence(Enum):
     unavailable = 0
@@ -81,6 +100,11 @@ class PositionConfidence(Enum):
     a5cm = 13
     a2cm = 14
     a1cm = 15
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 15:
+            raise ValueError("value must be an integer between 0 and 15")
 
 class ElevationConfidence(Enum):
     unavailable = 0
@@ -99,6 +123,12 @@ class ElevationConfidence(Enum):
     elev_000_05 = 13
     elev_000_02 = 14
     elev_000_01 = 15
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 15:
+            raise ValueError("value must be an integer between 0 and 15")
+        
 class HeadingConfidence(Enum):
     unavailable = 0
     prec10deg = 1
@@ -108,6 +138,11 @@ class HeadingConfidence(Enum):
     prec0_05deg = 5
     prec0_01deg = 6
     prec0_0125deg = 7
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 7:
+            raise ValueError("value must be an integer between 0 and 7")
 class SpeedConfidence(Enum):
     unavailable = 0
     prec100m = 1
@@ -117,11 +152,21 @@ class SpeedConfidence(Enum):
     prec0_1m = 5
     prec0_05m = 6
     prec0_01m = 7
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 7:
+            raise ValueError("value must be an integer between 0 and 7")
 class ThrottleConfidence(Enum):
     unavailable = 0
     prec10percent = 1
     prec1percent = 2
     prec0_5percent = 3
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
 class TransmissionState(Enum):
     neutral = 0
     park = 1
@@ -131,6 +176,11 @@ class TransmissionState(Enum):
     reserved2 = 5
     reserved3 = 6
     unavailable = 7
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 7:
+            raise ValueError("value must be an integer between 0 and 7")
 
 class BrakeAppliedStatus(Enum):
     unavailable = 0
@@ -138,29 +188,56 @@ class BrakeAppliedStatus(Enum):
     leftRear = 2
     rightFront = 3
     rightRear = 4
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 4:
+            raise ValueError("value must be an integer between 0 and 4")
 
 class TractionControlStatus(Enum):
     unavailable = 0
     off = 1
     on = 2
     engaged = 3
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
 
 class AntiLockBrakeStatus(Enum):
     unavailable = 0
     off = 1
     on = 2
     engaged = 3
-
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
+        
 class StabilityControlStatus(Enum):
     unavailable = 0
     off = 1
     on = 2
     engaged = 3
+    def __post_init__(self):
+        self.validate(self.value)
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
 
 class brakeBoostApplied(Enum):
     unavailable = 0
     off = 1
     on = 2
+
+    def __post_init__(self):
+        self.validate(self.value)
+
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 2:
+            raise ValueError("value must be an integer between 0 and 2")
 
 class AuxiliaryBrakeStatus(Enum):
     unavailable = 0
@@ -168,28 +245,125 @@ class AuxiliaryBrakeStatus(Enum):
     on = 2
     reserved = 3
 
+    def __post_init__(self):
+        self.validate(self.value)
+
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 3:
+            raise ValueError("value must be an integer between 0 and 3")
+
+class HeadingSlice(Enum):
+    from000_0to022_5degrees=0
+    from022_5to045_0degrees=1
+    from045_0to067_5degrees=2
+    from067_5to090_0degrees=3
+    from090_0to112_5degrees=4
+    from112_5to135_0degrees=5
+    from135_0to157_5degrees=6
+    from157_5to180_0degrees=7
+    from180_0to202_5degrees=8
+    from202_5to225_0degrees=9
+    from225_0to247_5degrees=10
+    from247_5to270_0degrees=11
+    from270_0to292_5degrees=12
+    from292_5to315_0degrees=13
+    from315_0to337_5degrees=14
+    from337_5to360_0degrees=15
+
+    def __post_init__(self):
+        self.validate(self.value)
+
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 15:
+            raise ValueError("value must be an integer between 0 and 15")
+class Latitude():
+    def validate(self, value):
+        if not isinstance(value, int) or value < -900000000 or value > 900000001:
+            raise ValueError("Latitude must be between -900000000 and 900000001")
+class Longitude():
+    def validate(self, value):
+        if not isinstance(value, int) or value < -1800000001 or value > 1800000001:
+            raise ValueError("Longitude must be between -1800000001 and 1800000001")
+
 @dataclass
 class Position3D():
-    lat: float
-    lon: float
-    
+    lat: float = 900000001
+    lon: float = 1800000001
+
+    def __post_init__(self):
+        self._validate_inputs()
+
+    def _validate_inputs(self):
+        Latitude.validate(self.lat)
+        Longitude.validate(self.lon)
+        
 @dataclass
 class RoadSignID():
-    position: Position3D
-    viewAngle: bytes
-    
+    position: Position3D = Position3D()
+    viewAngle: int = HeadingSlice.from000_0to022_5degrees.value
+
+    def __post_init__(self):
+        self._validate_inputs()
+
+    def _validate_inputs(self):
+        if not isinstance(self.position, Position3D):
+            raise ValueError("position must be a Position3D object")
+        if not isinstance(self.viewAngle, int):
+            raise ValueError("view angle must be an integer")
+        HeadingSlice.validate(self.viewAngle)
+        self.position._validate_inputs()
+
+class RoadRegulatorID():
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 65535:
+            raise ValueError("value must be an integer between 0 and 65535")
+class RoadSegmentID():
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 65535:
+            raise ValueError("value must be an integer between 0 and 65535")
+
 @dataclass
 class RoadSegmentReferenceID():
-    region: Optional[int]
-    id: int
+    region: Optional[int] = 0
+    id: int = 0
+    def __post_init__(self):
+        self._validate_inputs()
+
+    def _validate_inputs(self):
+        RoadRegulatorID.validate(self.region)
+        RoadSegmentID.validate(self.id)
+
+class DescriptiveName():
+    def validate(self, value):
+        if not isinstance(value, str):
+            raise ValueError("value must be a string")
+class LaneWidth():
+    def validate(self, value):
+        if not isinstance(value, int) or value < 0 or value > 32767:
+            raise ValueError("value must be an integer between 0 and 32767")
+
 @dataclass
 class GeographicalPath():
-    name: Optional[str]
-    id: Optional[RoadSegmentReferenceID]
-    anchor: Optional[Position3D]
-    laneWidth: Optional[int]
-    closedPath: Optional[bool]
-    direction: Optional[bytes]
+    name: Optional[str] = ""
+    id: Optional[RoadSegmentReferenceID] = RoadSegmentReferenceID()
+    anchor: Optional[Position3D] = Position3D()
+    laneWidth: Optional[int] = 0
+    closedPath: Optional[bool] = False
+    direction: Optional[int] = 0
+
+    def __post_init__(self):
+        self._validate_inputs()
+
+    def _validate_inputs(self):
+        DescriptiveName.validate(self.name)
+        self.id._validate_inputs()
+        LaneWidth.validate(self.laneWidth)
+        if not isinstance(self.closedPath, bool):
+            raise ValueError("closedPath must be a boolean")
+        HeadingSlice.validate(self.direction)
+
+
+
 @dataclass
 class Advisory():
     item: Union[int,str]
@@ -238,6 +412,20 @@ class AccelerationSet4Way():
     lat: int = 2001
     vert: int = -127
     yaw: int = 0
+    def __post_init__(self):
+        self._validate_input()
+
+    def _validate_input(self):
+        if not isinstance(self.long, int) or self.long < -2000 or self.long > 2001:
+            raise ValueError("long must be an int within the range [-2000, 2001]")
+        if not isinstance(self.lat, int) or self.lat < -2000 or self.lat > 2001:
+            raise ValueError("lat must be an int within the range [-2000, 2001]")
+        if not isinstance(self.vert, int) or self.vert < -127 or self.vert > 127:
+            raise ValueError("vert must be an int within the range [-127, 127]")
+        if not isinstance(self.yaw, int) or self.yaw < -32767 or self.yaw > 32767:
+            raise ValueError("yaw must be an int within the range [-32767, 32767]")
+
+
 @dataclass
 class BrakeSystemStatus():
     wheelBrakes: int = BrakeAppliedStatus.unavailable.value
@@ -280,7 +468,7 @@ class VehicleSize():
 @dataclass
 class BSMcoreData():
     msgCnt: int = 0
-    id: int = int
+    id: int = 99999999
     secMark: int = 65535
     lat: int  = 900000001
     long: int = 1800000001
@@ -331,7 +519,8 @@ class BSMcoreData():
         if self.id < 0 or self.id > 10000000:
             raise ValueError("ID must be between 0 and 10000000")
         
-        if not isinstance(self.transmission, int) or self.transmission < TransmissionState.unavailable.value or self.transmission > TransmissionState.max_value:
+        values = [member.value for member in TransmissionState]
+        if not isinstance(self.transmission, int) or self.transmission < min(values) or self.transmission > max(values):
             raise ValueError("Transmission must be an integer between TransmissionState.unavailable.value and TransmissionState.max_value")
         
     

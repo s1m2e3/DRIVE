@@ -7,13 +7,13 @@ from dataclasses import dataclass, asdict
 
 @dataclass
 class BasicSafetyMessage():
-    coreData : BSMcoreData
+    coreData : BSMcoreData = BSMcoreData()
 
 class BSM(Message):
     def __init__(self):
         super().__init__()
         self.kind = MessageType.BSM
     def add_basic_safety_message(self, basic_safety_message):
-        personal_safety_message = asdict(personal_safety_message)
-        personal_safety_message['basicType'] = personal_safety_message['basicType'].value
+        basic_safety_message = asdict(basic_safety_message)
+        basic_safety_message['basicType'] = basic_safety_message['basicType'].value
         self.data.update(personal_safety_message)
