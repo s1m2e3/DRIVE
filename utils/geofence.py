@@ -51,7 +51,7 @@ class GeoFence():
         for polygon in self.geofences:
             if polygon.within(point):
                 within = True
-                geofence_id = polygon.id
+                geofence_id = self.geofences.index(polygon)
                 break
 
         return within,geofence_id

@@ -712,7 +712,6 @@ class BSMcoreData():
             raise ValueError("Transmission must be an integer between TransmissionState.unavailable.value and TransmissionState.max_value")
         
     
-
 @dataclass
 class DataFrame:
     frameType: TravelerInfoType
@@ -737,6 +736,27 @@ class RoadSideAlert:
     regional : Optional[List[dict]]
 
     
+@dataclass
+class Registration:
+    id : int = -1
+    ip_address : str = None
+    long: int = Longitude.get_default()
+    lat: int = Latitude.get_default()
+    elevation : int = Elevation.get_default()
 
-    
+    def __post_init__(self):
+        self._validate_input()
 
+    def _validate_input(self):
+
+        Longitude.validate(self.long)
+        Latitude.validate(self.lat)
+        Elevation.validate(self.elevation)
+
+        if not isinstance(self.idx, int):
+            raise ValueError("Index must be an integer")
+        
+        if not isinstance(self.ip_addressvalue, str):
+            raise ValueError("IP address must be a string")
+        
+        

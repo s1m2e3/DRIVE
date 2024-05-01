@@ -6,7 +6,7 @@ class MessageType(Enum):
     TIM = 1
     PSM = 2
     RSA = 3
-
+    REGISTRATION = 4
 
 class Message():
     def __init__(self):

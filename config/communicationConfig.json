@@ -1,15 +1,16 @@
 {
     "receivers": [
         {
-        "messageType": "BSM",
-        "ip": "192.168.0.76",
-        "port": 8080
-        },
-        {
         "messageType": "PSM",
         "ip": "127.0.0.1",
         "port": 8080,
-        "id": "1"
+        "geofence_id": "1"
+        },
+        {
+        "messageType": "REGISTRATION",
+        "ip": "127.0.0.1",
+        "port": 8082,
+        "geofence_id": "2"
         }
     ],
     "senders": [
@@ -19,7 +20,7 @@
             "host_port": 8081,
             "receiver_ip": "192.168.0.138",
             "receiver_port": 33333,
-            "id": "1"
+            "geofence_id": "1"
         },
         {
             "messageType": "TIM",
@@ -27,8 +28,7 @@
             "host_port": 8081,
             "receiver_ip": "192.168.0.138",
             "receiver_port": 22222,
-            "id" : 1
+            "geofence_id" : 1
         }
-        
     ]
 }

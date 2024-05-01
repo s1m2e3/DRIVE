@@ -12,13 +12,12 @@ class TransceiverType(Enum):
     RSA = 3
 
 class Transceiver:
-    def __init__(self,kind:Union[TransceiverType.BSM,TransceiverType.TIM,TransceiverType.PSM,TransceiverType.RSA]):
-        self.kind = kind
-        self.receiver = None
-        self.sender = None
-        self.stored_messages = []
+    def __init__(self):
+        self.receivers = {}
+        self.senders = {}
+        self.stored_messages = {}
         
-    def add_messengers(self, filename:str):
+    def add_messengers_from_conf(self, filename:str):
         """
         Add receivers and senders based on the provided filename given type.
 
@@ -30,33 +29,43 @@ class Transceiver:
         """
         with open(filename, 'r') as f:
             communication_json = json.load(f)
-
-        if self.kind == TransceiverType.BSM:
-            receivers = [conf['messageType'] for conf in communication_json['receivers']]
-            receiver_bsm_index = receivers.index('BSM')
-            bsm_conf = communication_json['receivers'][receiver_bsm_index]
-            self.receiver = Receiver(message_type = MessageType.BSM,ip = bsm_conf['ip'], port = bsm_conf['port'])
-
-        elif self.kind == TransceiverType.TIM:
-            senders = [conf['messageType'] for conf in communication_json['senders']]
-            sender_tim_index = senders.index('TIM')
-            tim_conf = communication_json['senders'][sender_tim_index]
-            self.sender = Sender(message_type = MessageType.TIM,host_ip = tim_conf['host_ip'],host_port = tim_conf['host_port'],
-                                 receiver_ip=tim_conf['receiver_ip'], receiver_port = tim_conf['receiver_port'])
+        senders_geofence_id = [conf['geofence_id'] for conf in communication_json['senders']]
+        receivers_geofence_id = [conf['geofence_id'] for conf in communication_json['receivers']]
         
-        elif self.kind == TransceiverType.PSM:
-            receivers = [conf['messageType'] for conf in communication_json['receivers']]
-            receiver_psm_index = receivers.index('PSM')
-            psm_conf = communication_json['receivers'][receiver_psm_index]
-            self.receiver = Receiver(message_type = MessageType.PSM,ip = psm_conf['ip'], port = psm_conf['port'])
+        message_types_by_sender = {conf['geofence_id']:[] for conf in communication_json['senders']}
+        message_types_by_receiver = {conf['geofence_id']:[] for conf in communication_json['receivers']}
+        
+        for conf in communication_json['senders']:
+            message_types_by_sender[conf['geofence_id']].append(conf['messageType'])
 
-            senders = [conf['messageType'] for conf in communication_json['senders']]
-            sender_psm_index = senders.index('PSM')
-            psm_conf = communication_json['senders'][sender_psm_index]
-            self.sender = Sender(message_type = MessageType.PSM,host_ip = psm_conf['host_ip'],host_port = psm_conf['host_port'],
-                                 receiver_ip=psm_conf['receiver_ip'], receiver_port = psm_conf['receiver_port'])
+        for conf in communication_json['receivers']:
+            message_types_by_receiver[conf['geofence_id']].append(conf['messageType'])
 
-    async def store_message(self):
+        for geofence_id in senders_geofence_id:
+            if geofence_id not in self.senders:
+                self.senders[geofence_id] = {}
+            for message_type in message_types_by_sender[geofence_id]:
+                if message_type not in self.senders[geofence_id]:
+                    receiving_port = communication_json['senders'][senders_geofence_id.index(geofence_id)]['receiving_port']
+                    receiving_ip = communication_json['senders'][senders_geofence_id.index(geofence_id)]['receiving_ip']
+                    host_port = communication_json['senders'][senders_geofence_id.index(geofence_id)]['host_port']
+                    host_ip = communication_json['senders'][senders_geofence_id.index(geofence_id)]['host_ip']
+                    self.senders[geofence_id][message_type] = Sender(host_ip=host_ip, host_port=host_port, receiver_ip=receiving_ip, receiver_port=receiving_port, message_type=message_type, message="")
+                    
+        for geofence_id in receivers_geofence_id:
+            if geofence_id not in self.receivers:
+                self.receivers[geofence_id] = {}
+            if geofence_id not in self.stored_messages:
+                self.stored_messages[geofence_id] = []
+            for message_type in message_types_by_receiver[geofence_id]:
+                if message_type not in self.receivers[geofence_id]:
+                    port = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['port']
+                    ip = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['ip']
+                    self.receivers[geofence_id][message_type] = Receiver(ip=ip, port=port)
+                if message_type not in self.stored_messages[geofence_id]:
+                    self.stored_messages[geofence_id][message_type] = []
+
+    async def store_messages(self):
         """
         Asynchronously stores messages received by the receiver in the `stored_messages` list.
 
@@ -71,9 +80,11 @@ class Transceiver:
             None
         """
         
-        if self.receiver is not None:
+        if self.receivers is not None:
             while True:
-                self.stored_messages.append(self.receiver.message)
+                for geofence_id in self.receivers:
+                    for message_type in self.receivers[geofence_id]:
+                        self.stored_messages[geofence_id][message_type].append(self.receivers[geofence_id][message_type].message)
                 await asyncio.sleep(0.01)
 
     async def update_message_from_list(self):
@@ -86,14 +97,30 @@ class Transceiver:
     	This function does not take any parameters and does not return any values.
     	"""
 
-        if self.sender is not None and len(self.stored_messages)>0:
+        if self.senders is not None and len(self.stored_messages)>0:
             while True:
-                self.sender.update_message(self.stored_messages[-1]) 
+                for geofence_id in self.receivers:
+                    for message_type in self.receivers[geofence_id]:
+                        self.senders[geofence_id][message_type].update_message(self.stored_messages[geofence_id][message_type].pop(0))
                 await asyncio.sleep(0.01)
 
-    async def start(self):
+    async def add_mobile(self, geofence_id):
         """
-        Starts receiver and/or sender given type of Transceiver.
+        Asynchronously adds a sender to the `senders` attribute.
+
+        Parameters:
+            sender (Sender): The sender to be added.
+
+        Returns:
+            None
+        """
+        geofence_id = sender.geofence_id
+        message_type = sender.message_type
+    
+    async def start(self):
+        
+        """
+        Asynchronously starts sending and receiving messages also updates the message that the sender will send and stores the received messages.
 
         Parameters:
             self (object): The instance of the class.
@@ -101,24 +128,32 @@ class Transceiver:
         Returns:
             None
         """
-        if self.kind == TransceiverType.BSM:
-            self.receiver.start_receiving()
-            t1= asyncio.create_task(self.store_message())
-            t2 = asyncio.create_task(self.receiver.receive()) 
-            await asyncio.gather(t1,t2)
-            
-        elif self.kind == TransceiverType.TIM:
-            self.sender.start_sending()
-            await self.sender.send()
-        elif self.kind == TransceiverType.PSM:
-            self.receiver.start_receiving()
-            self.sender.start_sending()
-            
-            t1=asyncio.create_task(self.store_message())
-            t2=asyncio.create_task(self.update_message_from_list())
-            t3=asyncio.create_task(self.receiver.receive())
-            t4=asyncio.create_task(self.sender.send())
-            await asyncio.gather(t1,t2,t3,t4)
+
         
+        tasks = []
+        
+        if self.senders is not None:
+            for geofence_id in self.senders:
+                for message_type in self.senders[geofence_id]:
+                    t = asyncio.create_task(self.senders[geofence_id][message_type].send())
+                    tasks.append(t)
+        
+        if self.receivers is not None:
+            for geofence_id in self.receivers:
+                for message_type in self.receivers[geofence_id]:
+                    t = asyncio.create_task(self.receivers[geofence_id][message_type].receive())
+                    tasks.append(t)
+        
+        t = asyncio.create_task(self.store_messages())
+        tasks.append(t)
+        
+        t = asyncio.create_task(self.update_message_from_list())
+        tasks.append(t)
+        
+        await asyncio.gather(*tasks)
+
+
+
+       
         
         
