@@ -46,11 +46,13 @@ class Transceiver:
                 self.senders[geofence_id] = {}
             for message_type in message_types_by_sender[geofence_id]:
                 if message_type not in self.senders[geofence_id]:
+                    self.senders[geofence_id][message_type] = {}
                     receiving_port = communication_json['senders'][senders_geofence_id.index(geofence_id)]['receiving_port']
                     receiving_ip = communication_json['senders'][senders_geofence_id.index(geofence_id)]['receiving_ip']
                     host_port = communication_json['senders'][senders_geofence_id.index(geofence_id)]['host_port']
                     host_ip = communication_json['senders'][senders_geofence_id.index(geofence_id)]['host_ip']
-                    self.senders[geofence_id][message_type] = Sender(host_ip=host_ip, host_port=host_port, receiver_ip=receiving_ip, receiver_port=receiving_port, message_type=message_type, message="")
+                    conf_id = communication_json['senders'][senders_geofence_id.index(geofence_id)]['id']
+                    self.senders[geofence_id][message_type][conf_id] = Sender(host_ip=host_ip, host_port=host_port, receiver_ip=receiving_ip, receiver_port=receiving_port, message_type=message_type, message="")
                     
         for geofence_id in receivers_geofence_id:
             if geofence_id not in self.receivers:
@@ -59,11 +61,16 @@ class Transceiver:
                 self.stored_messages[geofence_id] = []
             for message_type in message_types_by_receiver[geofence_id]:
                 if message_type not in self.receivers[geofence_id]:
+                    self.senders[geofence_id][message_type] = {}
                     port = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['port']
                     ip = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['ip']
-                    self.receivers[geofence_id][message_type] = Receiver(ip=ip, port=port)
+                    conf_id = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['id']
+                    self.receivers[geofence_id][message_type][conf_id] = Receiver(ip=ip, port=port)
+
                 if message_type not in self.stored_messages[geofence_id]:
-                    self.stored_messages[geofence_id][message_type] = []
+                    self.stored_messages[geofence_id][message_type] = {}
+                    conf_id = communication_json['receivers'][receivers_geofence_id.index(geofence_id)]['id']
+                    self.stored_messages[geofence_id][message_type][conf_id] = []
 
     async def store_messages(self):
         """
@@ -84,7 +91,8 @@ class Transceiver:
             while True:
                 for geofence_id in self.receivers:
                     for message_type in self.receivers[geofence_id]:
-                        self.stored_messages[geofence_id][message_type].append(self.receivers[geofence_id][message_type].message)
+                        for conf_id in self.receivers[geofence_id][message_type]:
+                            self.stored_messages[geofence_id][message_type][conf_id].append(self.receivers[geofence_id][message_type].message)
                 await asyncio.sleep(0.01)
 
     async def update_message_from_list(self):
@@ -104,9 +112,9 @@ class Transceiver:
                         self.senders[geofence_id][message_type].update_message(self.stored_messages[geofence_id][message_type].pop(0))
                 await asyncio.sleep(0.01)
 
-    async def add_mobile(self, geofence_id):
+    async def add_mobile(self, client):
         """
-        Asynchronously adds a sender to the `senders` attribute.
+        Asynchronously adds a bsm receiver to the `receivers` list of the transceiver associated with the geofence id and add a RSA sender to the `senders` list of the transceiver associated with the geofence id.
 
         Parameters:
             sender (Sender): The sender to be added.
@@ -114,9 +122,8 @@ class Transceiver:
         Returns:
             None
         """
-        geofence_id = sender.geofence_id
-        message_type = sender.message_type
-    
+        async for geofence_id in client.add_receiver_from_message():
+
     async def start(self):
         
         """

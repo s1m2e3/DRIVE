@@ -2,6 +2,8 @@ from geofence import GeoFence
 from ..communication.receiver import Receiver
 from ..messages.message import MessageType
 import json
+import asyncio
+
 class Client():
     def __init__(self):
         self.mobiles_registered = []
@@ -27,6 +29,10 @@ class Client():
         self.receiver = Receiver(message_type = MessageType.REGISTRATION,ip = registration_conf['ip'], port = registration_conf['port'])
 
     async def add_receiver_from_message(self):
+        """
+        Asynchronously adds a receiver based on the message received. Checks if the message is not None, performs geofencing to determine if the message is within a geofence,
+        adds the mobile ID to the registered list if it meets the criteria, and yields the geofence ID. 
+        """
         while True:
             if self.receiver.message is not None:
                 message = self.receiver.message
@@ -35,5 +41,6 @@ class Client():
                 geofence_id_mobile_id = (geofence_id, mobile_id)
                 if within and geofence_id_mobile_id not in self.mobiles_registered:
                     self.mobiles_registered.append(geofence_id_mobile_id)
+                    await asyncio.sleep(0.1)
                     yield geofence_id
                 
