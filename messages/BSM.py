@@ -5,9 +5,7 @@ from data_classes import BSMcoreData
 from typing import Optional
 from dataclasses import dataclass, asdict
 
-@dataclass
-class BasicSafetyMessage():
-    coreData : BSMcoreData = BSMcoreData()
+
 
 class BSM(Message):
     def __init__(self):
